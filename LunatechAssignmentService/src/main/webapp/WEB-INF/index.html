@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+$("#cdt").hide();
+$("#cdtls").hide();
+$("#airport").hide();
+$("#airportc").hide();
+$("#runwrapper").hide();
+
+
+$("#cdetails").click(function(){
+  $("#airport").hide();
+  $("#adtls").hide();
+  $("#cdt").show();
+  $("#airportc").hide();
+  $("#runwrapper").hide();
+  $("#sdhtml").html('');
+  $("#rdhtml").html('');
+  $("#dhtml1").html('');
+  $("#dhtml").html('');
+  
+ });
+
+$("#adetails").click(function(){
+   $("#cdt").hide();
+   $("#cdtls").hide();
+   $("#airport").show();
+   $("#airportc").hide();
+   $("#runwrapper").hide();
+   $("#sdtls").hide();
+   $("#sdhtml").html('');
+   $("#rdhtml").html('');
+   $("#dhtml1").html('');
+ });
+ 
+ $("#cnadetails").click(function(){
+   $("#cdt").hide();
+   $("#cdtls").hide();
+   $("#airport").hide();
+   $("#airportc").show();
+   $("#runwrapper").hide();
+   $("#sdtls").hide();
+   $("#sdhtml").html('');
+   $("#rdhtml").html('');
+   $("#dhtml").html('');
+ });
+ 
+  $("#rdetails").click(function(){
+   $("#cdt").hide();
+   $("#cdtls").hide();
+   $("#airport").hide();
+   $("#airportc").hide();
+   $("#runwrapper").show();
+   $("#sdtls").hide(); 
+    $("#sdhtml").html('');
+    $("#dhtml1").html('');
+    $("#dhtml").html('');
+ });
+ 
+  $("#sdetails").click(function(){
+   $("#cdt").hide();
+   $("#cdtls").hide();
+   $("#airport").hide();
+   $("#airportc").hide();
+   $("#runwrapper").hide();
+   fetchSurfaceDetails();
+   $("#rdhtml").html('');
+   $("#dhtml1").html('');
+   $("#dhtml").html('');
+ });
+
+
+
+$("#countryfetch").click(function(){	
+ //Example json
+//  var json = '[{"id": 302556,"code": "AO","name": "Angola", "continent": "AF", "wikipediaLink": "http://en.wikipedia.org/wiki/Angola", "keywords": ""}]';
+   if($("#countrycode").val() != '') {
+    result = $.ajax({
+      headers: {
+    	  "Access-Control-Allow-Origin" : "*",
+    	  'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        	
+      },
+      'type': 'GET',
+      'url': 'http://localhost:8080/LunatechAssignmentService/rest/country/'+$("#countrycode").val(),     
+      'dataType': 'json',
+      success:function(response){
+    	 
+  //  	  var obj1=JSON.parse(response)
+    	
+ //    $.each(JSON.parse(response), function(idx, obj) {
+
+     	$("#cdtls").show();
+    
+   	    $("#id").val(response.id);
+        $("#code").val(response.code);
+        $("#name").val(response.name);
+        $("#continent").val(response.continent);
+        $("#wiki").val(response.wikipediaLink);
+        $("#keyword").val(response.keywords);
+ //  });   
+      },
+      error:function(jqXhr, textStatus, errorThrown){
+       alert('Error occurred while fetching data')
+      }
+	 });
+	 /**
+     $.each(JSON.parse(json), function(idx, obj) {	
+     	$("#cdtls").show();
+   	    $("#id").val(obj.id);
+        $("#code").val(obj.code);
+        $("#name").val(obj.name);
+        $("#continent").val(obj.continent);
+        $("#wiki").val(obj.wikipediaLink);
+        $("#keyword").val(obj.keywords);
+   }); **/  
+       
+   } else {
+   alert('Please enter country code !');
+   }
+ });
+ 
+ $("#airportfetch").click(function(){	
+ //Example json
+//  var json = '[{"countryCode":"US","countryName":"America","countOfAirports":"21500"},{"countryCode":"IND","countryName":"India","countOfAirports":"100"}]';
+    
+   if($("#countrycode1").val() != '') {
+    $("#adtls").show();
+     result = $.ajax({
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      'type': 'GET',
+      'url': 'http://localhost:8080/LunatechAssignmentService/rest/reports/airportspercountry?order=desc&value=2',     
+      'dataType': 'json',
+      success:function(response){
+   	 
+     var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Country Code</td><td></td><td>Country Name</td><td></td> <td>No.of Airports</td></tr>";  
+    $.each(response, function(idx, obj) {
+   
+	thtml=thtml+"<tr><td>"+obj.countryCode+"</td><td></td><td>"+obj.countryName+"</td> <td></td>  <td>"+obj.countOfAirports+"</td></tr>";
+   });   
+  
+   $("#dhtml").html(thtml);
+      },
+      error:function(jqXhr, textStatus, errorThrown){
+       alert('Error occurred while fetching data')
+      }
+	 });
+     //please comment
+  /**   var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Country Code</td><td></td><td>Country Name</td><td></td> <td>No.of Airports</td></tr>";  
+    $.each(JSON.parse(json), function(idx, obj) {
+	thtml=thtml+"<tr><td>"+obj.countryCode+"</td><td></td><td>"+obj.countryName+"</td> <td></td>  <td>"+obj.countOfAirports+"</td></tr>";
+   });  **/ 
+  
+//   $("#dhtml").html(thtml);//please comment
+   } else {
+   alert('Please enter country code !');
+   }
+ });
+ 
+  $("#airportfetch1").click(function(){	
+   //Example json
+//  var json = '[{"countryId": "302612","countryCode": "ZW","countryName": "Zimbabwe","airportId": "27232",        "airportName": "Kwekwe East Airport","airportType": "small_airport", "runwayId": "246281"},{"countryId": "302612","countryCode": "ZW","countryName": "Zimbabwe","airportId": "27232","airportName": "Kwekwe East Airport", "airportType": "small_airport","runwayId": "246282"}]';
+  
+   if($("#countrycode2").val() != '' || $("#countryname").val() != '') {
+	  if( $("#countrycode2").val() != '')
+		  var val3='code&value='+$("#countrycode2").val()+'&fuzzy=false';
+	  
+	  if( $("#countryname").val() != '')
+		  var val3='name&value='+$("#countryname").val()+'&fuzzy=true';
+    $("#adtls1").show();
+      result = $.ajax({
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      'type': 'GET',
+      'url': 'http://localhost:8080/LunatechAssignmentService/rest/country/?query='+val3,     
+      'dataType': 'json',
+      success:function(response){
+     var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Country Id</td><td>Country Code</td><td>Country Name</td><td>Airport Id</td><td>Airport Name</td><td>Airport Type</td><td>Runway Id</td></tr>";
+     
+    $.each(response, function(idx, obj) {
+      thtml=thtml+"<tr><td>"+obj.countryId+"</td><td>"+obj.countryCode+"</td><td>"+obj.countryName+"</td><td>"+obj.airportId+"</td><td>"+obj.airportName+"</td><td>"+obj.airportType+"</td><td>"+obj.runwayId+"</td></tr>";
+   });   
+   $("#dhtml1").html(thtml);
+      },
+      error:function(jqXhr, textStatus, errorThrown){
+       alert('Error occurred while fetching data')
+      }
+	 });
+	 /**
+   //please comment
+   var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Country Id</td><td>Country Code</td><td>Country Name</td><td>Airport Id</td><td>Airport Name</td><td>Airport Type</td><td>Runway Id</td></tr>";
+     
+    $.each(JSON.parse(json), function(idx, obj) {
+      thtml=thtml+"<tr><td>"+obj.countryId+"</td><td>"+obj.countryCode+"</td><td>"+obj.countryName+"</td><td>"+obj.airportId+"</td><td>"+obj.airportName+"</td><td>"+obj.airportType+"</td><td>"+obj.runwayId+"</td></tr>";
+   });   
+   $("#dhtml1").html(thtml);//please commemt**/
+   } else {
+   alert('Please enter  either country code or country name !');
+   }
+ });
+ 
+ $("#runfetch").click(function(){	
+  //Example json
+  var json = '[{"countryCode":"US","countryName":"America","runwaySurface":""},{"countryCode":"IND","countryName":"India","runwaySurface":"ALLUM"}]';
+   if($("#countrycode3").val() != '') {
+    $("#rdtls").show();
+     result = $.ajax({
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      'type': 'GET',
+      'url': 'http://localhost:8080/LunatechAssignmentService/rest/reports/runwaystypespercountry?countrycode='+$("#countrycode3").val(),     
+      'dataType': 'json',
+      success:function(response){
+       var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Country Code</td><td>Country Name</td><td>Runway Surface</td></tr>";     
+    $.each(response, function(idx, obj) {
+      thtml=thtml+"<tr><td>"+obj.countryCode+"</td><td>"+obj.countryName+"</td><td>"+obj.runwaySurface+"</td></tr>";
+   });   
+    
+   $("#rdhtml").html(thtml);
+      },
+      error:function(jqXhr, textStatus, errorThrown){
+       alert('Error occurred while fetching data')
+      }
+	 });
+     //please comment
+   /**  var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Country Code</td><td>Country Name</td><td>Runway Surface</td></tr>";     
+    $.each(JSON.parse(json), function(idx, obj) {
+      thtml=thtml+"<tr><td>"+obj.countryCode+"</td><td>"+obj.countryName+"</td><td>"+obj.runwaySurface+"</td></tr>";
+   });   
+    
+   $("#rdhtml").html(thtml);//please comment**/
+   } else {
+   alert('Please enter country code !');
+   }
+ });
+ function fetchSurfaceDetails() {
+ //Example json
+ // var json = '[{"leident":"H1","count":"12"},{"leident":"18","count":"1200"}]';
+   $("#sdtls").show();
+     result = $.ajax({
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      'type': 'GET',
+      'url': 'http://localhost:8080/LunatechAssignmentService/rest/reports/topcomUncomrunwayattribute?attribute=leident&order=desc&value=10',     
+      'dataType': 'json',
+      success:function(response){
+     var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Leident</td><td>Count</td></tr>";     
+    $.each(response, function(idx, obj) {
+      thtml=thtml+"<tr><td>"+obj.leident+"</td><td>"+obj.counts+"</td></tr>";
+   });   
+    
+   $("#sdhtml").html(thtml);
+      },
+      error:function(jqXhr, textStatus, errorThrown){
+       alert('Error occurred while fetching data')
+      }
+	 });
+     //please comment
+  /** var thtml ="<table border='1'><tr>";
+     thtml=thtml+"<td>Leident</td><td>Count</td></tr>";     
+    $.each(JSON.parse(json), function(idx, obj) {
+      thtml=thtml+"<tr><td>"+obj.leident+"</td><td>"+obj.count+"</td></tr>";
+   });   
+    
+   $("#sdhtml").html(thtml);//please comment**/
+ }
+});
+</script>
+</head>
+<body>
+<center><h1>Assignment</h1></center>
+<table>
+<tr>
+<td><a href="#" id="cdetails"><h4>Country Details By Country Code</h4></a></td><td></td><td></td>
+<td><a href="#" id="adetails"><h4>Airports By Country</h4></a></td><td></td><td></td>
+<td><a href="#" id="cnadetails"><h4>Airports By Code or Name</h4></a></td><td></td><td></td>
+<td><a href="#" id="rdetails"><h4>Runwayper  By Country</h4></a></td><td></td><td></td>
+<td><a href="#" id="sdetails"><h4>Type of Surface</h4></a></td>
+</tr>
+</table>
+<table>
+  <tr id="cdt">
+    <td>Country Code:</td>
+    <td><input type="text" name="countrycode" id="countrycode"></td>
+    <td><input type="button" name="fetch" id="countryfetch" value="Fetch"></td>
+  </tr>
+  <tr></tr>
+  <table id="cdtls">
+  <tr>
+    <td>Id:</td>
+    <td><input type="text" name="id" id="id"></td>
+  </tr>
+  <tr>
+    <td>Country Code:</td>
+    <td><input type="text" name="code" id="code"></td>
+  </tr>
+  <tr>
+    <td>Name:</td>
+    <td><input type="text" name="name" id="name"></td>
+  </tr>
+  <tr>
+    <td>Continent:</td>
+    <td><input type="text" name="continent" id="continent"></td>
+  </tr>
+  <tr>
+    <td>WikipediaLink:</td>
+    <td><input type="text" name="wiki" id="wiki"></td>
+  </tr>
+  <tr>
+    <td>keywords:</td>
+    <td><input type="text" name="keyword" id="keyword"></td>
+  </tr>
+</table>
+</table>
+<table>
+ <tr id="airport">
+    <td>Country Code:</td>
+    <td><input type="text" name="countrycode1" id="countrycode1"></td>
+    <td><input type="button" name="fetch" id="airportfetch" value="FetchAirports"></td>
+  </tr>
+  <tr></tr><tr></tr>
+  <table id="adtls">
+   <div id="dhtml"></div>
+  </table>
+</table>
+<table>
+ <tr id="airportc">
+    <td>Country Code:</td>
+    <td><input type="text" name="countrycode2" id="countrycode2"></td>
+    <td>Country Name:</td>
+    <td><input type="text" name="countryname" id="countryname"></td>    
+    <td><input type="button" name="fetch" id="airportfetch1" value="FetchAirports"></td>
+  </tr>
+  <tr></tr><tr></tr>
+  <table id="adtls1">
+   <div id="dhtml1"></div>
+  </table>
+</table>
+<table>
+ <tr id="runwrapper">
+    <td>Country Code:</td>
+    <td><input type="text" name="countrycode3" id="countrycode3"></td>
+    <td><input type="button" name="fetch" id="runfetch" value="Fetch"></td>
+  </tr>
+  <tr></tr><tr></tr>
+  <table id="rdtls">
+   <div id="rdhtml"></div>
+  </table>
+</table>
+ <table id="sdtls">
+   <div id="sdhtml"></div>
+  </table>
+</body>
+</html>

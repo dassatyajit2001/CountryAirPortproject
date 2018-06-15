@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache>
+    <defaultCache
+           maxEntriesLocalHeap="0"
+           eternal="false"
+           timeToIdleSeconds="1200"
+           timeToLiveSeconds="1200">
+
+    </defaultCache>
+
+
+    <cache name="cache1"
+           maxEntriesLocalHeap="10000"
+           eternal="true"
+           transactionalMode="off">
+        <persistence strategy="none"/>
+    </cache>
+
+
+</ehcache>
